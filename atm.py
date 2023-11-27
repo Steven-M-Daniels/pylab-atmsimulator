@@ -1,32 +1,13 @@
-def deposit_money(account, balance):
+def transfer_money(account, transaction, balance):
     while True:
         print()
         try:
-            amount = float(input(f"Amount to add to {account}: $"))
+            amount = float(input(f"Amount to {transaction} {account}: $"))
         except ValueError:
             print("Value must be a number!")
             continue
         else:
-            if amount < 0:
-                print("Amount must be a positive number.")
-                continue
-            else:
-                balance += amount
-                break
-            break
-    return balance
-
-
-def withdraw_money(account, balance):
-    while True:
-        print()
-        try:
-            amount = float(input(f"Amount to take from {account}: $"))
-        except ValueError:
-            print("Value must be a number!")
-            continue
-        else:
-            if balance - amount < 0:
+            if balance > 0 and balance - amount < 0:
                 print("Not enough money in account!")
                 continue
             elif amount < 0:
@@ -35,7 +16,6 @@ def withdraw_money(account, balance):
             else:
                 balance -= amount
                 break
-            break
     return balance
 
 
@@ -43,9 +23,9 @@ checking = 0.00
 savings = 0.00
 
 print("Welcome to the ATM Simulator!")
-print()
 
 while True:
+    print()
     print("Checking".ljust(12) + f"${checking:.2f}".rjust(15))
     print("Savings".ljust(12) + f"${savings:.2f}".rjust(15))
     print()
@@ -53,17 +33,26 @@ while True:
     if menu_selection == "d":
         menu_selection = input("(C)hecking or (S)avings? ").lower()
         if menu_selection == "c":
-            checking = deposit_money("Checking", checking)
+            checking = -1 * transfer_money("Checking", "deposit to", -1 * checking)
+            # for deposits the balance is changed to negative, deposit amount subtracted, and result changed
+            # back to positive. this allows for the use of one transfer function, rather than separate
+            # deposit and withdraw functions for essentially identical calculations.
         elif menu_selection == "s":
-            savings = deposit_money("Savings", savings)
+            savings = -1 * transfer_money("Savings", "deposit to", -1 * savings)
         else:
             print("Incorrect input detected.")
     elif menu_selection == "w":
         menu_selection = input("(C)hecking or (S)avings? ").lower()
         if menu_selection == "c":
-            checking = withdraw_money("Checking", checking)
+            if checking == 0:
+                print("No money in Checking.")
+                continue
+            checking = transfer_money("Checking", "withdraw from", checking)
         elif menu_selection == "s":
-            savings = withdraw_money("Savings", savings)
+            if savings == 0:
+                print("No money in Savings.")
+                continue
+            savings = transfer_money("Savings", "withdraw from", savings)
         else:
             print("Incorrect input detected.")
     elif menu_selection == "q":
