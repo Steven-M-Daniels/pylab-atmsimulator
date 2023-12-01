@@ -7,7 +7,7 @@ def transfer_money(account, transaction, balance):
             print("Value must be a number!")
             continue
         else:
-            if balance > 0 and balance - amount < 0:
+            if balance > 0 > balance - amount:
                 print("Not enough money in account!")
                 continue
             elif amount < 0:
@@ -34,9 +34,6 @@ while True:
         menu_selection = input("(C)hecking or (S)avings? ").lower()
         if menu_selection == "c":
             checking = -1 * transfer_money("Checking", "deposit to", -1 * checking)
-            # for deposits the balance is changed to negative, deposit amount subtracted, and result changed
-            # back to positive. this allows for the use of one transfer function, rather than separate
-            # deposit and withdraw functions for essentially identical calculations.
         elif menu_selection == "s":
             savings = -1 * transfer_money("Savings", "deposit to", -1 * savings)
         else:
